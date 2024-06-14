@@ -7,11 +7,12 @@ from .models import EmailOTP
 import smtplib
 from email.message import EmailMessage
 
-# Create your views here.
+# Global Variables
+server = smtplib.SMTP('smtp.gmail.com', 587)
+server.starttls()
 
+# Create your views here.
 def otp_send(username, gen_otp) :
-	server = smtplib.SMTP('smtp.gmail.com', 587)
-	server.starttls()
 	from_mail = 'test@gmail.com'
 	server.login(from_mail, 'password')
 	to_mail = username
