@@ -78,7 +78,7 @@ def email_verify(request) :
 		otpobj = request.POST['get_otp']
 		verify_otp = EmailOTP.objects.filter(otp = otpobj).exists()
 		if verify_otp :
-			return render(request, 'dashboard.html', {})
+			return redirect('dashboard')
 		else :
 			return render(request, 'verify.html', {'message' : "OTP dosn't match"})
 	return render(request, 'verify.html', {})
