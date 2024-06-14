@@ -91,3 +91,6 @@ def email_verify(request) :
 def dashboard(request) :
 	username = request.session['username']
 	return render(request, 'dashboard.html', {'username' : username})
+
+
+
