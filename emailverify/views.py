@@ -83,6 +83,7 @@ def email_verify(request) :
 			return render(request, 'verify.html', {'message' : "OTP dosn't match"})
 	return render(request, 'verify.html', {})
 
+@login_required
 def dashboard(request) :
 	username = request.session['username']
 	return render(request, 'dashboard.html', {'username' : username})
