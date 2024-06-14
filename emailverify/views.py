@@ -28,8 +28,8 @@ def login_view(request) :
 			server = smtplib.SMTP('smtp.gmail.com', 587)
 			server.starttls()
 
-			from_mail = 'sahilprogrammer07@gmail.com'
-			server.login(from_mail, 'hokx buhp xrkp acbm')
+			from_mail = 'test@gmail.com'
+			server.login(from_mail, 'password')
 			to_mail = username
 			msg = EmailMessage()
 			msg['Subject'] = "OTP verification"
