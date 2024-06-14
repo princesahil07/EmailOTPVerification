@@ -9,13 +9,35 @@ from email.message import EmailMessage
 
 # Create your views here.
 
+def otp_send(username, gen_otp) :
+	server = smtplib.SMTP('smtp.gmail.com', 587)
+	server.starttls()
+	from_mail = 'test@gmail.com'
+	server.login(from_mail, 'password')
+	to_mail = username
+	msg = EmailMessage()
+	msg['Subject'] = "OTP verification"
+	msg['From'] = from_mail
+	msg['To'] = to_mail
+	content = f'''
+	This is system generated mail, do not reply
+	on this mail
+
+	{username} your OTP is {gen_otp}
+
+	*do not share this OTP with anyone, this will response
+	for loss your data or may hack your account
+	'''
+	msg.set_content(content)
+	server.send_message(msg)
+	print("email send", content)
+
 def login_view(request) :
 	message = ''
 	if request.method == 'POST' :
 		username = request.POST['username']
 		password = request.POST['password']
-		request.session['username'] = username
-		get_users =  request.session['username']
+		
 		users = auth.authenticate(username=username, password=password)
 		if users is not None :
 			gen_otp = random.randint(000000, 999999)
@@ -25,27 +47,10 @@ def login_view(request) :
 			)
 			otpobj.save()
 
-			server = smtplib.SMTP('smtp.gmail.com', 587)
-			server.starttls()
-			from_mail = 'test@gmail.com'
-			server.login(from_mail, 'password')
-			to_mail = username
-			msg = EmailMessage()
-			msg['Subject'] = "OTP verification"
-			msg['From'] = from_mail
-			msg['To'] = to_mail
-			content = f'''
-				This is system generated mail, do not reply
-				on this mail
+			otp_send(username, gen_otp)
 
-				{username} your OTP is {gen_otp}
-
-				*do not share this OTP with anyone, this will response
-				for loss your data or may hack your account
-			'''
-			msg.set_content(content)
-			server.send_message(msg)
-			print("email send", content)
+			request.session['username'] = username
+			get_users =  request.session['username']
 
 			auth.login(request, users)
 			return redirect('emailverify')
@@ -82,7 +87,6 @@ def email_verify(request) :
 			return render(request, 'verify.html', {'message' : "OTP dosn't match"})
 	return render(request, 'verify.html', {})
 
-@login_required
 def dashboard(request) :
 	username = request.session['username']
 	return render(request, 'dashboard.html', {'username' : username})
