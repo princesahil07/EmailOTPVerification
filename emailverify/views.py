@@ -92,5 +92,7 @@ def dashboard(request) :
 	username = request.session['username']
 	return render(request, 'dashboard.html', {'username' : username})
 
-
+def logout_view(request) :
+	logout(request, login)
+	return redirect('/')
 
